@@ -7,9 +7,10 @@ npm install @tomsd/morphoanalyzer
 
 # Usage
 
-``` js
-const analyzer = require("@tomsd/morphoanalyzer");
+``` typescript
+import { Analyzer } from "@tomsd/morphoanalyzer";
 
-analyzer.analyze("これは、テストです。").then(function(r){console.log(r);});
+Analyzer.analyze("これは、テストです。").then(console.log);
+
 
 ```
