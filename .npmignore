@@ -1,0 +1,10 @@
+node_modules/
+src/
+index.js
+.gitignore
+.npmignore
+package-lock.json
+test/test.js
+tsconfig.base.json
+tsconfig.cjs.json
+tsconfig.esm.json

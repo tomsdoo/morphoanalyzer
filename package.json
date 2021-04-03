@@ -1,18 +1,27 @@
 {
   "name": "@tomsd/morphoanalyzer",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "morphological analyzer for Japanese with kuromoji",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "scripts": {
-    "test": "mocha test/test.js --timeout 10000"
+    "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
+    "test": "mocha test/class/test2.js --timeout 10000"
   },
-  "keywords": ["morphological analysis","japanese"],
+  "keywords": [
+    "morphological analysis",
+    "japanese"
+  ],
   "author": "tom",
   "license": "MIT",
   "dependencies": {
     "kuromoji": "^0.1.2"
   },
   "devDependencies": {
-    "mocha": "^7.0.1"
+    "@types/kuromoji": "^0.1.0",
+    "@types/node": "^14.14.37",
+    "mocha": "^8.3.2",
+    "typescript": "^4.2.3"
   }
 }
