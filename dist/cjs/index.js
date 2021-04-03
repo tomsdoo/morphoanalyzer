@@ -35,7 +35,7 @@ function getTokenizerPromise() {
     return new Promise((resolve, reject) => {
         kuromoji
             .builder({
-            dicPath: path.join(__dirname, "../../node_modules/kuromoji/dict/")
+            dicPath: path.join(__dirname, "../../dict/")
         })
             .build((err, tokenizer) => {
             if (err) {
