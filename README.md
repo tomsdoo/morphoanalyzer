@@ -1,5 +1,7 @@
 # @tomsd/morphoanalyzer
 
+It is a morphological analyzer for Japanese with kuromoji.
+
 ## Installation
 ``` sh
 npm install @tomsd/morphoanalyzer
