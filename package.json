@@ -15,6 +15,10 @@
   ],
   "author": "tom",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomsdoo/morphoanalyzer"
+  },
   "dependencies": {
     "kuromoji": "^0.1.2"
   },
