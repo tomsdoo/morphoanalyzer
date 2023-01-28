@@ -30,7 +30,7 @@ class TokenizerManager {
 
 const manager = TokenizerManager.activate();
 
-type SimpleToken = {
+export type SimpleToken = {
   surface: string;
   pos: string;
 };
