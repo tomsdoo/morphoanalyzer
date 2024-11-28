@@ -1,14 +1,18 @@
 import * as kuromoji from "kuromoji";
 import * as path from "path";
 
-function getTokenizerPromise(){
+function getTokenizerPromise(): Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> {
   return new Promise((resolve,reject) => {
     kuromoji
     .builder({
       dicPath: path.join(__dirname, "../../dict/")
     })
     .build((err, tokenizer) => {
-      if(err){reject(err);}else{resolve(tokenizer);}
+      if(err) {
+        reject(err);
+      } else {
+        resolve(tokenizer);
+      }
     });
   });
 }
