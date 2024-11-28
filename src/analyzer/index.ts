@@ -1,38 +1,28 @@
 import * as kuromoji from "kuromoji";
 import * as path from "path";
 
-function getTokenizerPromise(): Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> {
+const cache = new Map<string, kuromoji.Tokenizer<kuromoji.IpadicFeatures>>();
+function getTokenizerPromise(dicPath: string): Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> {
   return new Promise((resolve,reject) => {
+    const cacheItem = cache.get(dicPath);
+    if(cacheItem) {
+      resolve(cacheItem);
+    }
+
     kuromoji
     .builder({
-      dicPath: path.join(__dirname, "../../dict/")
+      dicPath,
     })
     .build((err, tokenizer) => {
       if(err) {
         reject(err);
       } else {
+        cache.set(dicPath, tokenizer);
         resolve(tokenizer);
       }
     });
   });
 }
-
-class TokenizerManager {
-  private _tokenizer: any;
-  constructor(){
-    this._tokenizer = null;
-  }
-  public async getTokenizer() {
-    if(this._tokenizer){return this._tokenizer;}
-    this._tokenizer = await getTokenizerPromise();
-    return this._tokenizer;
-  }
-  public static activate() {
-    return new TokenizerManager();
-  }
-};
-
-const manager = TokenizerManager.activate();
 
 export type SimpleToken = {
   surface: string;
@@ -41,7 +31,7 @@ export type SimpleToken = {
 
 export class Analyzer {
   public static async analyze(sentence: string) : Promise<SimpleToken[]> {
-    return manager.getTokenizer()
+    return getTokenizerPromise(path.join(__dirname, "../../dict/"))
     .then(tokenizer =>
       tokenizer
       .tokenize(sentence)
