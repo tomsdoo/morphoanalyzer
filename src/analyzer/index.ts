@@ -2,25 +2,27 @@ import * as kuromoji from "kuromoji";
 import * as path from "path";
 
 const cache = new Map<string, kuromoji.Tokenizer<kuromoji.IpadicFeatures>>();
-function getTokenizerPromise(dicPath: string): Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> {
-  return new Promise((resolve,reject) => {
+function getTokenizerPromise(
+  dicPath: string,
+): Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> {
+  return new Promise((resolve, reject) => {
     const cacheItem = cache.get(dicPath);
-    if(cacheItem) {
+    if (cacheItem) {
       resolve(cacheItem);
     }
 
     kuromoji
-    .builder({
-      dicPath,
-    })
-    .build((err, tokenizer) => {
-      if(err) {
-        reject(err);
-      } else {
-        cache.set(dicPath, tokenizer);
-        resolve(tokenizer);
-      }
-    });
+      .builder({
+        dicPath,
+      })
+      .build((err, tokenizer) => {
+        if (err) {
+          reject(err);
+        } else {
+          cache.set(dicPath, tokenizer);
+          resolve(tokenizer);
+        }
+      });
   });
 }
 
@@ -30,17 +32,32 @@ export type SimpleToken = {
 };
 
 export class Analyzer {
-  public static async analyze(sentence: string) : Promise<SimpleToken[]> {
-    return getTokenizerPromise(path.join(__dirname, "../../dict/"))
-    .then(tokenizer =>
+  protected dicPath: string;
+  constructor(dicPath: string) {
+    this.dicPath = dicPath;
+  }
+
+  public async tokenize(sentence: string): Promise<SimpleToken[]> {
+    return getTokenizerPromise(this.dicPath).then((tokenizer) =>
       tokenizer
-      .tokenize(sentence)
-      .map((wo: {surface_form: string; pos: string;}) => ({
-        surface: wo.surface_form,
-        pos: wo.pos
-      }))
+        .tokenize(sentence)
+        .map((wo: { surface_form: string; pos: string }) => ({
+          surface: wo.surface_form,
+          pos: wo.pos,
+        })),
     );
   }
-};
+
+  public static create(dicPath?: string) {
+    return new Analyzer(dicPath ?? path.join(__dirname, "../../dict/"));
+  }
+
+  public static async analyze(
+    sentence: string,
+    dicPath?: string,
+  ): Promise<SimpleToken[]> {
+    return await Analyzer.create(dicPath).tokenize(sentence);
+  }
+}
 
 export default Analyzer;
