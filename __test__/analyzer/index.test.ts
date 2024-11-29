@@ -7,12 +7,12 @@ describe("Analyzer", () => {
   beforeEach(() => {
     sentence = "これは、テストです。";
     expectedResults = [
-      { surface: 'これ', pos: '名詞' },
-      { surface: 'は', pos: '助詞' },
-      { surface: '、', pos: '記号' },
-      { surface: 'テスト', pos: '名詞' },
-      { surface: 'です', pos: '助動詞' },
-      { surface: '。', pos: '記号' }
+      { surface: "これ", pos: "名詞" },
+      { surface: "は", pos: "助詞" },
+      { surface: "、", pos: "記号" },
+      { surface: "テスト", pos: "名詞" },
+      { surface: "です", pos: "助動詞" },
+      { surface: "。", pos: "記号" },
     ];
   });
 
@@ -23,5 +23,3 @@ describe("Analyzer", () => {
     await expect(Analyzer.analyze(sentence)).resolves.toEqual(expectedResults);
   });
 });
-
-

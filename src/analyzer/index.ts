@@ -1,34 +1,30 @@
 import * as kuromoji from "kuromoji";
 import * as path from "path";
 
-function getTokenizerPromise(){
-  return new Promise((resolve,reject) => {
+const cache = new Map<string, kuromoji.Tokenizer<kuromoji.IpadicFeatures>>();
+function getTokenizerPromise(
+  dicPath: string,
+): Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> {
+  return new Promise((resolve, reject) => {
+    const cacheItem = cache.get(dicPath);
+    if (cacheItem) {
+      resolve(cacheItem);
+    }
+
     kuromoji
-    .builder({
-      dicPath: path.join(__dirname, "../../dict/")
-    })
-    .build((err, tokenizer) => {
-      if(err){reject(err);}else{resolve(tokenizer);}
-    });
+      .builder({
+        dicPath,
+      })
+      .build((err, tokenizer) => {
+        if (err) {
+          reject(err);
+        } else {
+          cache.set(dicPath, tokenizer);
+          resolve(tokenizer);
+        }
+      });
   });
 }
-
-class TokenizerManager {
-  private _tokenizer: any;
-  constructor(){
-    this._tokenizer = null;
-  }
-  public async getTokenizer() {
-    if(this._tokenizer){return this._tokenizer;}
-    this._tokenizer = await getTokenizerPromise();
-    return this._tokenizer;
-  }
-  public static activate() {
-    return new TokenizerManager();
-  }
-};
-
-const manager = TokenizerManager.activate();
 
 export type SimpleToken = {
   surface: string;
@@ -36,17 +32,32 @@ export type SimpleToken = {
 };
 
 export class Analyzer {
-  public static async analyze(sentence: string) : Promise<SimpleToken[]> {
-    return manager.getTokenizer()
-    .then(tokenizer =>
+  protected dicPath: string;
+  constructor(dicPath: string) {
+    this.dicPath = dicPath;
+  }
+
+  public async tokenize(sentence: string): Promise<SimpleToken[]> {
+    return getTokenizerPromise(this.dicPath).then((tokenizer) =>
       tokenizer
-      .tokenize(sentence)
-      .map((wo: {surface_form: string; pos: string;}) => ({
-        surface: wo.surface_form,
-        pos: wo.pos
-      }))
+        .tokenize(sentence)
+        .map((wo: { surface_form: string; pos: string }) => ({
+          surface: wo.surface_form,
+          pos: wo.pos,
+        })),
     );
   }
-};
+
+  public static create(dicPath?: string) {
+    return new Analyzer(dicPath ?? path.join(__dirname, "../../dict/"));
+  }
+
+  public static async analyze(
+    sentence: string,
+    dicPath?: string,
+  ): Promise<SimpleToken[]> {
+    return await Analyzer.create(dicPath).tokenize(sentence);
+  }
+}
 
 export default Analyzer;

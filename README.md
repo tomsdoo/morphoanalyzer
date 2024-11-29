@@ -38,4 +38,12 @@ Analyzer.analyze("これは、テストです。")
 ]
 */
 
+// and you can feel free to pass your dict directory, too
+Analyzer
+  .analyze(
+    "これは、テストです。",
+    "path/to/dict"
+  )
+  .then(console.log);
+
 ```
