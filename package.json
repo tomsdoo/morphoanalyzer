@@ -2,15 +2,21 @@
   "name": "@tomsd/morphoanalyzer",
   "version": "2.5.3",
   "description": "morphological analyzer for Japanese with kuromoji",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
+  "type": "module",
   "files": [
     "dist",
     "dict"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
+    "build": "tsc --project tsconfig.esm.json",
     "test": "vitest"
   },
   "keywords": [
@@ -29,7 +35,7 @@
   "devDependencies": {
     "@types/kuromoji": "0.1.3",
     "@types/node": "25.6.0",
-    "typescript": "5.9.3",
+    "typescript": "6.0.3",
     "vitest": "4.1.4"
   }
 }

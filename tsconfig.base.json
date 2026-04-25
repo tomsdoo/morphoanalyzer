@@ -3,10 +3,10 @@
     "lib": ["esnext"],
     "declaration": true,
     "strict": true,
-    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["@types/node", "@types/kuromoji"]
   }
 }
