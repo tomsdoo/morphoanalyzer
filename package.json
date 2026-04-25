@@ -1,6 +1,6 @@
 {
   "name": "@tomsd/morphoanalyzer",
-  "version": "2.5.3",
+  "version": "3.0.0",
   "description": "morphological analyzer for Japanese with kuromoji",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
