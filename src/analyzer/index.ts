@@ -1,5 +1,6 @@
 import * as kuromoji from "kuromoji";
 import * as path from "path";
+import { fileURLToPath } from "url";
 
 const cache = new Map<string, kuromoji.Tokenizer<kuromoji.IpadicFeatures>>();
 function getTokenizerPromise(
@@ -49,7 +50,12 @@ export class Analyzer {
   }
 
   public static create(dicPath?: string) {
-    return new Analyzer(dicPath ?? path.join(__dirname, "../../dict/"));
+    const dictDir = path.join(
+      path.dirname(fileURLToPath(new URL(import.meta.url))),
+      "../../dict",
+    );
+
+    return new Analyzer(dicPath ?? dictDir);
   }
 
   public static async analyze(
